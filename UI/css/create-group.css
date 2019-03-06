@@ -1,0 +1,16 @@
+ul {
+    display: flex;
+    flex-direction: column;
+}
+ul li {
+    list-style: none;
+    font-weight: bold;
+    text-align: left;
+    padding: 5px;
+    color: white;
+}
+
+ul li:hover {
+    cursor: pointer;
+}
+
