@@ -142,3 +142,26 @@ export const inValidSignUpData = [
     lastname: 'James33'
   },
 ];
+
+export const inValidLoginData = [
+  // no email/empty email 0
+  {
+    password: 'jamiejesss'
+  },
+
+  // email not found in the db 1
+  {
+    email: 'jossyoloye@gmail.com',
+    password: 'jossyboy'
+  },
+
+  // no password/empty password 2
+  {
+    email: 'jjames@gmail.com'
+  },
+  // password not in db 3
+  {
+    email: 'jjames@gmail.com',
+    password: 'lasiselenu'
+  }
+];
