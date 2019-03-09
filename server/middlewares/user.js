@@ -129,4 +129,48 @@ export class UserValidator {
     req.body.lastname = lastname;
     return next();
   }
+
+
+  /**
+   * login User to the application
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {function} next - Calls the next function/route handler
+   * @returns {object} JSON representing the failure message.
+   */
+  static loginValidator(req, res, next) {
+    let { email, password } = req.body;
+    if (!email) {
+      return res.status(400).json({
+        status: 400,
+        error: 'Email is required',
+      });
+    }
+    email = email.toLowerCase().trim();
+    const foundUser = users.find(user => user.email === email);
+    if (!foundUser) {
+      return res.status(401).json({
+        status: 401,
+        error: 'Authentication failed',
+      });
+    }
+
+    if (!password) {
+      return res.status(400).json({
+        status: 400,
+        error: 'Password is required',
+      });
+    }
+
+    password = password.trim();
+    if (foundUser && password !== foundUser.password) {
+      return res.status(401).json({
+        status: 401,
+        error: 'Incorrect login details',
+      });
+    }
+    req.body.foundUser = foundUser;
+    req.body.password = password;
+    return next();
+  }
 }
