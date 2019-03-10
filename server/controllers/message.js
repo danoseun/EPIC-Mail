@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { sentMessages, unreadMessages } from '../dummyDb';
+import { sentMessages, receivedMessages } from '../dummyDb';
 import { generateRandomArbitraryNumber, generateRandomParentMessageId } from '../helpers/random';
 
 /**
@@ -34,6 +34,21 @@ export class MessageController {
     return res.status(201).json({
       status: 201,
       data: { newMessage }
+    });
+  }
+
+  /**
+       * User can fetch all received emails on the application
+       * @static
+       * @param {object} req - The request object
+       * @param {object} res - The response object
+       * @return {object} JSON object representing success
+       * @memeberof MessageController
+       */
+  static receiveAllMails(req, res) {
+    return res.status(200).json({
+      status: 200,
+      data: receivedMessages
     });
   }
 }

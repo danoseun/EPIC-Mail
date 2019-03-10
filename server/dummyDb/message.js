@@ -21,7 +21,7 @@ export const sentMessages = [
   },
 ];
 
-export const unreadMessages = [
+export const receivedMessages = [
   {
     id: 1,
     createdOn: Date.now(),
@@ -40,6 +40,28 @@ export const unreadMessages = [
     senderId: 1,
     receiverId: 2,
     parentMessageId: null,
+    status: 'read'
+  },
+
+  {
+    id: 3,
+    createdOn: Date.now(),
+    subject: 'Deduction bank alert',
+    message: 'Your transcation with firstbank group...',
+    senderId: 1,
+    receiverId: 2,
+    parentMessageId: null,
     status: 'unread'
+  },
+
+  {
+    id: 4,
+    createdOn: Date.now(),
+    subject: 'Deduction bank alert',
+    message: 'Your transcation with firstbank group...',
+    senderId: 1,
+    receiverId: 2,
+    parentMessageId: null,
+    status: 'read'
   },
 ];
