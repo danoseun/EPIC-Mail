@@ -73,4 +73,19 @@ export class MessageController {
       data: unreadMails
     });
   }
+
+  /**
+       * User can fetch all sent emails on the application
+       * @static
+       * @param {object} req - The request object
+       * @param {object} res - The response object
+       * @return {object} JSON object representing success
+       * @memeberof MessageController
+       */
+  static fetchAllSentMails(req, res) {
+    return res.status(200).json({
+      status: 200,
+      data: sentMessages
+    });
+  }
 }
