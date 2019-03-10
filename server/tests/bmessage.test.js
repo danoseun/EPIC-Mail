@@ -112,5 +112,42 @@ describe('Test for Message routes', () => {
           done();
         });
     });
+    it('Should return 200 status code and fetch a single MAIL in the db', (done) => {
+      chai.request(app)
+        .get('/api/v1/messages/1')
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          expect(res.body.status).to.equal(200);
+          expect(res.body.data).to.be.a('object');
+          done();
+        });
+    });
+    it('Should return 404 status code and error message', (done) => {
+      chai.request(app)
+        .get('/api/v1/messages/2.5')
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.be.a('object');
+          res.body.should.have.property('status');
+          res.body.should.have.property('error');
+          expect(res.body.status).to.equal(404);
+          expect(res.body.error).to.equal('Email not found');
+          done();
+        });
+    });
+    it('Should return 404 status code and error message', (done) => {
+      chai.request(app)
+        .get('/api/v1/messages/qwe')
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.be.a('object');
+          res.body.should.have.property('status');
+          res.body.should.have.property('error');
+          expect(res.body.status).to.equal(404);
+          expect(res.body.error).to.equal('Email not found');
+          done();
+        });
+    });
   });
 });
