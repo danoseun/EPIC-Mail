@@ -88,4 +88,20 @@ export class MessageController {
       data: sentMessages
     });
   }
+
+  /**
+       * User can fetch single email record on the application
+       * @static
+       * @param {object} req - The request object
+       * @param {object} res - The response object
+       * @return {object} JSON object representing success
+       * @memeberof MessageController
+       */
+  static getSingleMail(req, res) {
+    const { foundEmail } = req.body;
+    return res.status(200).json({
+      status: 200,
+      data: foundEmail
+    });
+  }
 }

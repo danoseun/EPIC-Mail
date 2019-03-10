@@ -1,7 +1,8 @@
 import { UserValidator } from './user';
-import { messageValidator } from './message';
+import { messageValidator, findMailById } from './message';
 
 export {
   UserValidator,
-  messageValidator
+  messageValidator,
+  findMailById
 };
