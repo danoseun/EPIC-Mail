@@ -150,4 +150,17 @@ describe('Test for Message routes', () => {
         });
     });
   });
+  describe('Test for DELETE endpoints API', () => {
+    it('Should return 200 status code and delete email by id', (done) => {
+      chai.request(app)
+        .delete('/api/v1/messages/2')
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          expect(res.body.status).to.equal(200);
+          expect(res.body.message).to.equal('Email successfully deleted');
+          done();
+        });
+    });
+  });
 });
