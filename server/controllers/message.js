@@ -2,6 +2,10 @@
 import { sentMessages, receivedMessages } from '../dummyDb';
 import { generateRandomArbitraryNumber, generateRandomParentMessageId } from '../helpers/random';
 
+const messages = [...sentMessages, ...receivedMessages];
+// eslint-disable-next-line no-return-assign
+messages.forEach((element, index) => element.id = index + 1);
+
 /**
  * Class representing MessageController
  * @class MessageController
@@ -102,6 +106,23 @@ export class MessageController {
     return res.status(200).json({
       status: 200,
       data: foundEmail
+    });
+  }
+
+  /**
+       * User can delete single email record on the application
+       * @static
+       * @param {object} req - The request object
+       * @param {object} res - The response object
+       * @return {object} JSON object representing success
+       * @memeberof MessageController
+       */
+  static deleteSingleEmail(req, res) {
+    const { foundEmail } = req.body;
+    messages.splice(foundEmail.id - 1, 1);
+    return res.status(200).json({
+      status: 200,
+      message: 'Email successfully deleted'
     });
   }
 }
