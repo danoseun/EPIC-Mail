@@ -86,5 +86,18 @@ describe('Test for Message routes', () => {
           done();
         });
     });
+    it('Should return 200 status code and fetch all received UNREAD MAILS in the db', (done) => {
+      const messages = receivedMessages.length;
+      chai.request(app)
+        .get('/api/v1/messages/unread')
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          expect(res.body.status).to.equal(200);
+          expect(res.body.data).to.be.a('array');
+          expect(receivedMessages).to.have.length(messages);
+          done();
+        });
+    });
   });
 });

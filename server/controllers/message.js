@@ -51,4 +51,26 @@ export class MessageController {
       data: receivedMessages
     });
   }
+
+  /**
+       * User can fetch all unread received emails on the application
+       * @static
+       * @param {object} req - The request object
+       * @param {object} res - The response object
+       * @return {object} JSON object representing success
+       * @memeberof MessageController
+       */
+  static fetchAllUnreadMails(req, res) {
+    const unreadMails = receivedMessages.filter(message => message.status === 'unread');
+    if (unreadMails.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        error: 'You have no unread emails at this time'
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      data: unreadMails
+    });
+  }
 }
