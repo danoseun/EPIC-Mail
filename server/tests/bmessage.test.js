@@ -3,7 +3,7 @@ import chaiHttp from 'chai-http';
 import app from '../../app';
 
 import { validMessage, invalidMessages } from './mockData/message';
-import { sentMessages } from '../dummyDb';
+import { sentMessages, receivedMessages } from '../dummyDb';
 
 const { should, expect } = chai;
 should();
@@ -67,6 +67,22 @@ describe('Test for Message routes', () => {
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
           expect(res.body.error).to.equal('Message is required');
+          done();
+        });
+    });
+  });
+
+  describe('Test for GET endpoints API', () => {
+    it('Should return 200 status code and fetch all RECEIVED MAILS in the db', (done) => {
+      const messages = receivedMessages.length;
+      chai.request(app)
+        .get(url)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          expect(res.body.status).to.equal(200);
+          expect(res.body.data).to.be.a('array');
+          expect(receivedMessages).to.have.length(messages);
           done();
         });
     });

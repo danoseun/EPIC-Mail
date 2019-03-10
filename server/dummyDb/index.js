@@ -1,8 +1,8 @@
 import { users } from './user';
-import { unreadMessages, sentMessages } from './message';
+import { receivedMessages, sentMessages } from './message';
 
 export {
   users,
-  unreadMessages,
+  receivedMessages,
   sentMessages
 };
