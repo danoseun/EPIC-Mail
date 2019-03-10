@@ -99,5 +99,18 @@ describe('Test for Message routes', () => {
           done();
         });
     });
+    it('Should return 200 status code and fetch all SENT MAILS in the db', (done) => {
+      const messages = sentMessages.length;
+      chai.request(app)
+        .get('/api/v1/messages/sent')
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          expect(res.body.status).to.equal(200);
+          expect(res.body.data).to.be.a('array');
+          expect(sentMessages).to.have.length(messages);
+          done();
+        });
+    });
   });
 });
