@@ -50,10 +50,6 @@ p {
   color: #333;
 }
 
-.bg-mail {
-  background: #2168ff;
-}
-
 .bg-dark {
   background: #333;
   color: #fff;
@@ -271,7 +267,7 @@ textarea {
   background: #fff;
   border-left: 1px solid #fff;
   margin: 2rem 2rem;
-  overflow-y: scroll;
+  overflow-y: scroll; 
   overflow-x: hidden;
 }
 
@@ -308,6 +304,9 @@ textarea {
   padding: 5px;
 }
 
+td {
+  border-bottom: 1px solid #ddd;
+}
 /* Div: Compose message */
 #compose-box {
   margin-right: 10%;
@@ -404,8 +403,23 @@ textarea {
   background: red;
 }
 
+/*footer*/
+#main-footer {
+  position: fixed;
+  font-size: 0.8rem;
+  bottom: 0;
+  width: 100%;
+}
+
 
 /* media queries*/
+
+@media (max-width: 510px) {
+  #compose-box #compose-form #compose-btn button {
+    font-size: 8px;
+    padding: 5px;
+  }
+}
 @media (max-width: 768px) {
   .aside ul li a:hover, aside ul li a:focus {
     background: rgba(0, 0, 0, 0.4);

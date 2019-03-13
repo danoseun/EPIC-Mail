@@ -121,6 +121,23 @@
   }
   
 
+  /*footer styles*/
+#main-footer {
+  position: fixed;
+  font-size: 0.8rem;
+  bottom: 0;
+  width: 100%;
+}
+
+.bg-dark {
+  background: #333;
+  color: #fff;
+}
+
+.text-center {
+  text-align: center;
+}
+
   
   
   /* ================================= 
