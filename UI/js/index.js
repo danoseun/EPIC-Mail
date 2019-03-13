@@ -8,12 +8,6 @@ const introductions = [
 const loadIntroTexts = () => {
   introductions.forEach((intro, index, introArr) => {
     let appIntro = document.querySelector('.l-heading');
-    // appIntro.style.direction = "ltr";
-    // appIntro.style.fontSize = "large";
-    // appIntro.style.fontStyle = "oblique";
-    // appIntro.style.fontFamily = "sans-serif";
-    // appIntro.style.marginRight = "30px";
-    // appIntro.style.textAlign = "center";
     appIntro.innerHTML = introArr[index++ % introArr.length];
     setInterval(() => {
       appIntro.innerHTML = introArr[index++ % introArr.length];
