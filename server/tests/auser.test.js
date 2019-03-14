@@ -54,7 +54,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Supply an email');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -69,7 +69,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Email cannot include space');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -84,7 +84,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Email format is invalid');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -99,7 +99,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Email should be 10 to 30 characters long');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -130,7 +130,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Supply password');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -145,7 +145,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Ensure password is between 6 to 15 characters long');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -161,7 +161,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Supply firstname');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -176,7 +176,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('firstname cannot include space');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -191,7 +191,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Firstname should be between 2 to 20 characters long');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -206,7 +206,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Firstname can only contain alphabets');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -222,7 +222,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Supply lastname');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -237,7 +237,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('lastname cannot contain space');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -252,7 +252,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Lastname should be between 2 to 20 characters long');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -267,7 +267,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Firstname can only contain alphabets');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -298,7 +298,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Email is required');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -326,7 +326,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Password is required');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });

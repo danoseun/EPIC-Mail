@@ -4,3 +4,55 @@
 
 # EPIC-mail
 This is an application that helps people exchange information over the internet.
+
+## Getting Started
+
+```
+# Clone the repository
+>$ git clone https://github.com/danoseun/EPIC-mail.git
+
+# Change directory into it
+>$ cd EPIC-mail
+
+# Install all dependencies
+> npm install
+
+# Create a .env file and fill it with the sample provided in .env.sample file
+> $ touch .env
+
+# Start the application in development mode
+> $ npm run start:dev
+
+# Start the application in production mode
+> $ npm run start
+
+# Open running application on browser
+> http:localhost:3000/api/v1
+If you change the port in your .env file the use the port instead of the one above
+
+```
+
+## Application features
+* User can create an account
+* User can login to access features that require authentication
+* User can send a message
+* User can get all received messages
+* User can get all unread mails
+* User can get all sent mails
+* User can find a message by id
+* User can delete a message
+### Prerequisites
+* Install NodeJs
+## API Documentation
+Access API documentation through this link [Here](https:///api/v1/api-docs)
+## Running the tests
+* Run the test with the command  
+`> $ npm run test`
+## Built with
+HTML  
+CSS  
+Express/Nodejs
+## Contributing to the Project
+Contributions are welcome and appreciated. To contribute
+## Authors
+* Oluwaseun Somefun
