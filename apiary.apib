@@ -1,0 +1,293 @@
+FORMAT: 1A
+HOST: https://seun-epicmail.herokuapp.com/api/v1
+
+# EPIC-maiil
+
+The internet is increasingly becoming an integral part of our lives. Ever since the invention of electronic mail by Ray Tomlinson , emails have grown to become the primary medium of exchanging information over the internet between two or more people, until the advent of Instant Messaging (IM) Apps.
+
+This is the API(Application Programming Interface) documentation for the EPIC-M@il application
+
+# Group Message
+
+## Message Collection [/messages]
+
+- Attributes (Message Full)
+
+### Retreive All Messages [GET]
+
+- Request (application/json)
+
+- Response 200 (application/json)
+
+    - Attributes (array[Message])
+
+### Send a Message [POST]
+
+- Request with complete fields (application/json)
+    - Attributes (Message Create)
+
+- Response 201 (application/json)
+
+    - Attributes (Message Successfully sent)
+
+- Request with empty subject field (application/json)
+    - Attributes (Message Empty Subject)
+    
+- Response 400 (application/json)
+
+    - Attributes (Message NoSubject)
+    
+- Request with empty message field (application/json)
+    - Attributes (Message Empty Message)
+    
+- Response 400 (application/json)
+
+    - Attributes (Message NoMessage)
+
+## Retrieve Sent Messages [/messages/sent]
+
+### Filter Sent Messages [GET]
+
+- Request (application/json)
+
+- Response 200 (application/json)
+
+    - Attributes (array[array[Message Full])
+    
+- Response 404 (application/json)
+
+    - Attributes (Message NotFound)
+
+## Retrieve Unread Messages [/messages/unread]
+
+### Filter Unread Messages [GET]
+
+- Request (application/json)
+
+- Response 200 (application/json)
+
+    - Attributes (Message Unread)
+
+- Response 404 (application/json)
+
+    - Attributes (Message NotFound)
+
+## Remove a Message [/messages/{id}]
+
+### Delete a Message [DELETE]
+
+- Response 200 (application/json)
+
+    - Attributes (Message Delete)
+    
+- Response 404 (application/json)
+
+    - Attributes (Message NotFound)
+
+# Group User
+
+## User Collection [/auth/signup]
+
+- Attributes (User Create)
+
+### Sign Up a User [POST]
+
+- Request with complete details (application/json)
+
+    - Attributes (User Create)
+
+- Response 200 (application/json)
+
+    - Attributes (object[User signedUp])
+
+- Request with empty firstname (application/json)
+
+    - Attributes (User empty firstname signup)
+
+- Response 400 (application/json)
+
+    - Attributes (User emptyFirstname)
+    
+- Request with empty lastname (application/json)
+
+    - Attributes (User empty lastname signup)
+
+- Response 400 (application/json)
+
+    - Attributes (User emptyLastname)
+    
+- Request with empty email (application/json)
+
+    - Attributes (User empty email signup)
+
+- Response 400 (application/json)
+
+    - Attributes (User emptyEmail)
+    
+- Request with empty password (application/json)
+
+    - Attributes (User empty password signup)
+
+- Response 400 (application/json)
+
+    - Attributes (User emptyPassword)
+
+## Login a User [/auth/login]
+
+- Attributes (User Login)
+
+### Login a User [POST]
+
+- Request with authenticated user (application/json)
+
+    - Attributes (User Login)
+
+- Response 200 (application/json)
+
+    - Attributes (array[User signedUp])
+
+- Request with empty email (application/json)
+
+    - Attributes (User Login with empty email)
+
+- Response 400 (application/json)
+
+    - Attributes (User emptyEmail)
+    
+- Request with empty password (application/json)
+
+    - Attributes (User Login with password)
+
+- Response 400 (application/json)
+
+    - Attributes (User emptyPassword)
+
+
+# Data Structures
+
+## Message Create (object)
+- subject: This is the subject (string, required)
+- message: This is the actual message body (string, required)
+
+## Message Successfully sent (object)
+- id: 1 (number, required)
+- createdOn: March 11th 2019, 6:01:36 am (string, required)
+- subject: This is the subject (string, required)
+- message: This is the actual message body (string, required)
+- senderId: 2 (number, required)
+- receiverId: 1 (number, required)
+- parentMessageId: 1 (number, required)
+- status: sent
+
+## Message Unread (object)
+- id: 1 (number, required)
+- createdOn: March 11th 2019, 6:01:36 am (string, required)
+- subject: This is the subject (string, required)
+- message: This is the actual message body (string, required)
+- senderId: 2 (number, required)
+- receiverId: 1 (number, required)
+- parentMessageId: 1 (number, required)
+- status: unread
+
+## Message Empty Subject (object)
+- subject: ''
+- message: This is the actual message body
+
+## Message Empty Message (object)
+- subject: This is the subject
+- message: ''
+
+## Message NoSubject (object)
+- error: Subject is required
+
+## Message NoMessage (object)
+- error: Message is required
+
+## Message Full (object)
+- id: 1 (number, required)
+- createdOn: March 11th 2019, 6:01:36 am (string, required)
+- subject: This is the subject (string, required)
+- message: This is the actual message body (string, required)
+- senderId: 2 (number, required)
+- receiverId: 1 (number, required)
+- parentMessageId: 1 (number, required)
+- status: sent (enum[string], required) - Is it a read, unread or sent message
+  - read
+  - unread
+  - sent
+
+## Message (object)
+- id: 1 (number, required)
+- createdOn: March 11th 2019, 6:01:36 am (string, required)
+- subject: This is the subject (string, required)
+- message: This is the actual message body (string, required)
+- senderId: 2 (number, required)
+- receiverId: 1 (number, required)
+- parentMessageId: 1 (number/null, required)
+- status: sent (enum[string], required) - Is it a read, unread or sent message
+  - read
+  - unread
+  - sent
+
+## Message Delete (object)
+- message: Email successfully deleted (string, required)
+
+## Message NotFound (object)
+- error: Email was not found
+
+## User Create (object)
+- firstname: John (string, required)
+- lastname: Dewy (string, required)
+- email: johndewy@gmail.com (string, required)
+- password: 1212#4444 (string, required)
+
+## User empty firstname signup (object)
+- firstname: ""
+- lastname: Doe
+- email: johndoe@aol.com
+- password: 1212#4444 (string, required)
+
+## User empty lastname signup (object)
+- firstname: John
+- lastname: ''
+- email: johndoe@aol.com (string, required)
+- password: 1212#4444 (string, required)
+
+## User empty email signup (object)
+- firstname: John
+- lastname: Doe
+- email: ''
+- password: 1212#4444 (string, required)
+
+## User empty password signup (object)
+- firstname: John
+- lastname: Doe
+- email: johndoe@aol.com
+- password: ''
+
+## User Login (object)
+- email: johnjames@gmail.com (string, required)
+- password: johnjames (string, required)
+
+## User Login with empty email (object)
+- email: ''
+- password: 1212#4444
+
+## User Login without password (object)
+- email: johndoe@aol.com
+- password: ''
+
+## User signedUp (object)
+- token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNTUyNTI0MjA3LCJleHAiOjE1NTMxMjkwMDd9.MXSQtbhXcw5TcEPqmVSl15I5GSgnJniyYlUhhQFXiqc
+
+## User emptyFirstname (object)
+- error: (error object generated by validatorjs)
+
+## User emptyLastname (object)
+- error: (error object generated by validatorjs)
+
+## User emptyEmail (object)
+- error: (error object generated by validatorjs)
+
+## User emptyPassword (object)
+- error: (error object generated by validatorjs)
