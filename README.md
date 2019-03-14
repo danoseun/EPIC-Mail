@@ -44,7 +44,13 @@ If you change the port in your .env file the use the port instead of the one abo
 ### Prerequisites
 * Install NodeJs
 ## API Documentation
-Access API documentation through this link [Here](https:///api/v1/api-docs)
+Access API documentation through this link [Here](https://oluwaseunsomefun.docs.apiary.io/)
+
+## Pivotal Tracker
+* Project is currently being managed with Pivotal Tracker, a project management tool. You can find the stories [Here](https://www.pivotaltracker.com/n/projects/2316493)
+
+## Base URL
+* The project's base URL can be acessed by clicking on this link [Here](https://seun-epicmail.herokuapp.com/api/v1)
 ## Running the tests
 * Run the test with the command  
 `> $ npm run test`
