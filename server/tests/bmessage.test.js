@@ -38,7 +38,7 @@ describe('Test for Message routes', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Subject is required');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -52,7 +52,7 @@ describe('Test for Message routes', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Subject should be 50 or less characters');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });
@@ -66,7 +66,7 @@ describe('Test for Message routes', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(400);
-          expect(res.body.error).to.equal('Message is required');
+          expect(res.body.error).to.be.an('object');
           done();
         });
     });

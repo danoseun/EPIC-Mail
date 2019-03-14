@@ -1,3 +1,4 @@
+import Validator from 'validatorjs';
 /* eslint-disable use-isnan */
 import { sentMessages, receivedMessages } from '../dummyDb';
 
@@ -11,27 +12,19 @@ import { sentMessages, receivedMessages } from '../dummyDb';
 export const messageValidator = (req, res, next) => {
   /* eslint-disable prefer-const */
   let { subject, message } = req.body;
-  if (!subject) {
-    return res.status(400).json({
-      status: 400,
-      error: 'Subject is required'
-    });
-  }
-  subject = subject.toLowerCase().trim();
-  if (subject.length > 50) {
-    return res.status(400).json({
-      status: 400,
-      error: 'Subject should be 50 or less characters'
-    });
-  }
 
-  if (!message) {
+  const rules = {
+    subject: 'required|max:50',
+    message: 'required'
+  };
+  const validation = new Validator(req.body, rules);
+
+  if (validation.fails()) {
     return res.status(400).json({
       status: 400,
-      error: 'Message is required'
+      error: validation.errors.errors
     });
   }
-  message = message.toLowerCase().trim();
   req.body.subject = subject;
   req.body.message = message;
   return next();
