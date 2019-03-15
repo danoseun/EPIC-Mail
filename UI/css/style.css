@@ -1,0 +1,436 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  line-height: 1.4;
+}
+
+a {
+  text-decoration: none;
+}
+
+p {
+  margin: 0.75rem 0;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1100px;
+  max-height: 100%;
+  margin: auto;
+  padding: 0 2rem;
+  overflow: hidden;
+}
+
+.container-fluid {
+  max-width: 90%;
+  overflow: hidden;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color:  #2168ff;
+}
+
+.text-primary-blue {
+  color: #2168ff;
+}
+
+.bg-light {
+  background: #f4f4f4;
+  color: #333;
+}
+
+.bg-dark {
+  background: #333;
+  color: #fff;
+}
+
+.bg-primary {
+  background: #2168ff;
+  color: #fff;
+}
+
+.l-heading {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.1;
+}
+
+.m-heading {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.1;
+}
+
+.lead {
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+}
+
+.btn {
+  display: inline-block;
+  color: #fff;
+  background: #2168ff;
+  padding: 0.5rem 2rem;
+  border: none;
+  border-radius: 5px;
+}
+
+.btn-del {
+  background: red;
+}
+
+.btn-save {
+  background: #215ba6;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.btn-dark {
+  background: #333;
+  color: #fff;
+}
+
+.py-1 {
+  padding: 1.5rem 0;
+}
+.py-2 {
+  padding: 2rem 0;
+}
+.py-3 {
+  padding: 3rem 0;
+}
+
+.p-1 {
+  padding: 1.5rem;
+}
+.p-2 {
+  padding: 2rem;
+}
+.p-3 {
+  padding: 3rem;
+}
+
+.m-top-1 {
+  margin-top: 1rem;
+}
+.unread-inbox {
+  font-weight: bolder;
+}
+
+.inbox-alert {
+  padding: 0.1rem 0.1rem;
+  background: #ddd;
+  color: red;
+  font-weight: bold;
+  border-radius: 50%;
+}
+
+.draft-alert {
+  color: red;
+}
+
+.line-height {
+  line-height: 2;
+}
+
+.email-labels {
+  background: #ddd;
+  padding: 0.5rem;
+  border-radius: 2rem;
+}
+.text-area-group {
+  display: flex;
+  max-width: 10rem;
+}
+
+.text-area {
+  display: flex;
+  max-width: 100%;
+}
+
+textarea {
+  width: 90%;
+  margin: 0 auto;
+  height: 20rem;
+  border: none;
+  font-family: 'sans-serif';
+}
+
+
+
+
+
+
+/* Showcase */
+#showcase {
+  background: #333 url("../assets/bgimg.jpg") no-repeat right
+    center/cover;
+  height: 100vh;
+  color: #fff;
+}
+
+#showcase .showcase-content {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 0 2rem;
+  /* Overlay */
+  position: absolute;
+  top: 65px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Section: How it works */
+#how .items {
+  display: flex;
+  padding: 1rem;
+}
+
+#how .items .item {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+}
+
+#how .items .item i {
+  background: #2168ff;
+  padding: 1rem;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+/**/
+.mailbox {
+  display: flex;
+  max-height: 52rem;
+  justify-content: space-between;
+}
+
+.box {
+  flex: 2;
+}
+
+.box .aside ul {
+  list-style: none;
+  margin: 0 1rem;
+}
+
+.box .aside ul li {
+  margin: 1.75rem 0;
+}
+
+.aside ul li a {
+  color: #333;
+}
+
+.aside ul li a span {
+  font-size: 0.9rem;
+}
+
+.aside ul li sup {
+  display: none;
+}
+
+.aside ul li a:hover,
+.aside ul li a:focus {
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  padding: 0.75rem 0.4rem;
+  border-radius: 5px;
+}
+
+.box:first-child {
+  max-width: 15rem;
+}
+
+.box:last-child {
+  flex: 10;
+  background: #fff;
+  border-left: 1px solid #fff;
+  margin: 2rem 2rem;
+  overflow-y: scroll; 
+  overflow-x: hidden;
+}
+
+.inbox {
+  display: flex;
+  flex-direction: column;
+}
+
+.box #view-message,
+.box #view-message h3 {
+  font-size: 0.9rem;
+}
+
+/* Table Styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table #table-header {
+  background: #f4f4f4;
+}
+
+.table tr {
+  cursor: pointer;
+}
+
+.table tr:hover {
+  background: #ddd;
+}
+
+.table td {
+  padding: 5px;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+}
+/* Div: Compose message */
+#compose-box {
+  margin-right: 10%;
+}
+
+#compose-box .form-wrap #compose-btn {
+  display: flex;
+  justify-content: center;
+}
+
+#compose-box .form-wrap #compose-btn button {
+  max-width: 20%;
+  margin: 0.5rem 0.2rem;
+}
+
+#compose-box .form-wrap .form-group label[for="message-body"],
+#compose-box .form-wrap .form-group label[for="recipient"] {
+  display: none;
+}
+
+#compose-box .form-wrap textarea {
+  outline: none;
+}
+
+#compose-box .form-wrap .form-group input {
+  padding: 1rem;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #333;
+}
+
+/* DIV: Message Thread */
+#view-message > div > a {
+  color: #333;
+}
+
+
+/* Div: Create group */
+.create-grp {
+  height: 45rem;
+  overflow-y: hidden;
+}
+
+.create-grp .form-div {
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.form-div .form-group > input[type="text"],
+.form-div .form-group select {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.65rem 0;
+  font-family: "Roboto", sans-serif;
+  color: #333;
+  font-size: 1rem;
+  border: 0.09rem solid #333;
+}
+
+.form-div .form-group > input[type="text"]:focus,
+.form-div .form-group select:focus {
+  border: 0.01rem solid #6cd4ff;
+}
+
+.create-grp .group-list {
+  display: flex;
+  max-width: 43rem;
+  margin: 2.5rem auto;
+}
+
+.create-grp .group-list ul {
+  list-style: none;
+}
+
+.create-grp .group-list ul li {
+  line-height: 1.6rem;
+  margin-left: 0.5rem;
+}
+
+.create-grp .group-list ul li a {
+  color: #333;
+}
+
+.create-grp .group-list .list:first-child {
+  flex: 5;
+  border-right: 2px solid #333;
+}
+
+.create-grp .group-list .list:last-child {
+  flex: 7;
+}
+
+#clear-btn:hover {
+  background: red;
+}
+
+/*footer*/
+#main-footer {
+  position: fixed;
+  font-size: 0.8rem;
+  bottom: 0;
+  width: 100%;
+}
+
+
+/* media queries*/
+
+@media (max-width: 510px) {
+  #compose-box #compose-form #compose-btn button {
+    font-size: 8px;
+    padding: 5px;
+  }
+}
+@media (max-width: 768px) {
+  .aside ul li a:hover, aside ul li a:focus {
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    padding: 0.2rem, 0.3rem;
+    border-radius: 2rem;
+  }
+  .aside ul li span:nth-child(2) {
+    display: none;
+  }
+
+}
+
+
