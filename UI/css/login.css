@@ -40,6 +40,7 @@
     padding: 10px 15px;
     text-transform: uppercase;
     text-align: center;
+    text-decoration: none;
     display: block;
   }
   
@@ -64,6 +65,27 @@
     -moz-border-radius: 5px;
     border-radius: 2px;
   }
+
+  /*hamburger*/
+
+  .hamburger {
+    font-weight: bold;
+    color: #fff;
+    font-size: 30px;
+    display: none;
+    cursor: pointer;
+    background: #34495e;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    box-shadow: 1px 2px 1px 0px black;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-left: -100px;
+    float: right;
+    position: relative;
+    z-index: 5;
+}
   
 
   form {
@@ -89,7 +111,7 @@
   
   /* Set a style for all buttons */
   button {
-    background-color: #2168ff;
+    background-color: #3b3a3f;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -187,4 +209,13 @@
     }
   }
 
+  @media (max-width: 768px) {
+    .hamburger {
+      display: block;
+    }
+
+    ul {
+      display: none;
+    }
+  }
   

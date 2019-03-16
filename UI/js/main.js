@@ -16,3 +16,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+
+const nav = document.querySelector('.aside ul');
+const hamburgerTwo = document.querySelector('.hamburger-two');
+
+const clickHamburger = () => {
+  if (nav.style.display === 'block') {
+    nav.style.display = 'none'
+    return false;
+  } else {
+    nav.style.display = 'block';
+    nav.style.width = '110px';
+    nav.style.marginTop = '-20px';
+    nav.style.marginLeft = '5px';
+  }
+  
+}
+
+hamburgerTwo.addEventListener('click', clickHamburger);
