@@ -38,7 +38,7 @@ p {
 }
 
 .text-primary {
-  color:  #2168ff;
+  color:  #333;
 }
 
 .text-primary-blue {
@@ -56,7 +56,7 @@ p {
 }
 
 .bg-primary {
-  background: #2168ff;
+  background: #215ba6;
   color: #fff;
 }
 
@@ -190,13 +190,6 @@ textarea {
   align-items: center;
   height: 100%;
   padding: 0 2rem;
-  /* Overlay */
-  position: absolute;
-  top: 65px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4);
 }
 
 /* Section: How it works */
@@ -212,7 +205,7 @@ textarea {
 }
 
 #how .items .item i {
-  background: #2168ff;
+  background: #c0c1b8;
   padding: 1rem;
   border-radius: 50%;
   margin-bottom: 1rem;
@@ -242,6 +235,7 @@ textarea {
   color: #333;
 }
 
+
 .aside ul li a span {
   font-size: 0.9rem;
 }
@@ -251,7 +245,8 @@ textarea {
 }
 
 .aside ul li a:hover,
-.aside ul li a:focus {
+.aside ul li a:focus,
+.active {
   background: rgba(0, 0, 0, 0.4);
   color: #fff;
   padding: 0.75rem 0.4rem;
@@ -411,6 +406,28 @@ td {
   width: 100%;
 }
 
+/*hamburger-two*/
+.parent-flex {
+  display: flex;
+}
+
+.hamburger-two {
+  font-weight: bold;
+  color:#fff;
+  font-size: 30px;
+  display: none;
+  cursor: pointer;
+  background: #34495e;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  box-shadow: 1px 2px 1px 0px black;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: -90px;
+  z-index: 5;
+}
+
 
 /* media queries*/
 
@@ -421,16 +438,18 @@ td {
   }
 }
 @media (max-width: 768px) {
-  .aside ul li a:hover, aside ul li a:focus {
-    background: rgba(0, 0, 0, 0.4);
-    color: #fff;
-    padding: 0.2rem, 0.3rem;
-    border-radius: 2rem;
-  }
-  .aside ul li span:nth-child(2) {
+  .aside ul {
     display: none;
+    box-shadow: 1px 2px 1px 1px gray;
   }
 
+  .hamburger-two {
+    display: block;
+  }
+
+  .items {
+    flex-direction: column;
+  } 
 }
 
 
