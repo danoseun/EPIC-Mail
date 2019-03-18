@@ -1,5 +1,7 @@
-import { users } from '../dummyDb';
+import { hashSync, compareSync } from 'bcrypt';
+import db from '../config';
 import { createToken } from '../helpers/auth';
+import { createUser, queryUsersByEmail } from '../config/sql';
 
 /**
  * Class representing UserController
@@ -14,23 +16,34 @@ export class UserController {
      * @return {object} JSON object representing success
      * @memeberof UserController
      */
-  static createAccount(req, res) {
+  static async createAccount(req, res) {
     const {
       email, password, firstname, lastname
     } = req.body;
-    const newUser = {
-      id: users.length + 1,
+    const params = [
       email,
-      password,
+      hashSync(password, 10),
       firstname,
       lastname
-    };
-    users.push(newUser);
-    const token = createToken(newUser);
-    return res.status(201).json({
-      status: 201,
-      data: { token }
-    });
+    ];
+
+    try {
+      const { rows } = await db.query(createUser, params);
+      console.log('====>', rows);
+      if (rows) {
+        const authUser = rows[0];
+        const token = createToken(authUser);
+        return res.status(201).json({
+          status: 201,
+          data: { token }
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        error: error.message
+      });
+    }
   }
 
   /**
@@ -41,12 +54,35 @@ export class UserController {
      * @return {object} JSON object representing success
      * @memeberof UserController
      */
-  static loginUser(req, res) {
-    const { foundUser } = req.body;
-    const token = createToken(foundUser);
-    return res.status(200).json({
-      status: 200,
-      data: { token }
-    });
+  static async loginUser(req, res) {
+    const { email } = req.body;
+    const params = [email];
+    try {
+      const { rows } = await db.query(queryUsersByEmail, params);
+      if (rows) {
+        if (rows[0]) {
+          const comparePassword = compareSync(req.body.password, rows[0].password);
+          if (comparePassword) {
+            const authUser = rows[0];
+            const token = createToken(authUser);
+            return res.status(200).json({
+              status: 200,
+              data: { token }
+            });
+          }
+          if (!comparePassword) {
+            return res.status(401).json({
+              status: 401,
+              error: 'Authentication failed'
+            });
+          }
+        }
+      }
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error: error.message
+      });
+    }
   }
 }

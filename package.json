@@ -6,9 +6,10 @@
   "scripts": {
     "start": "babel-node app.js",
     "start:dev": "nodemon --exec babel-node app.js",
-    "test": "nyc --reporter=html --reporter=text mocha ./server/tests/*.test.js --require @babel/register --exit",
+    "test": "npm run migrate && nyc --reporter=html --reporter=text mocha ./server/tests/*.test.js --require @babel/register --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "coveralls": "nyc --reporter=lcov --reporter=text-lcov npm test"
+    "coveralls": "nyc --reporter=lcov --reporter=text-lcov npm test",
+    "migrate": "babel-node ./server/models"
   },
   "repository": {
     "type": "git",
@@ -35,11 +36,13 @@
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.4",
     "@babel/register": "^7.0.0",
+    "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.0",
     "morgan": "^1.9.1",
+    "pg": "^7.9.0",
     "validatorjs": "^3.15.1"
   },
   "devDependencies": {

@@ -3,7 +3,7 @@ import chaiHttp from 'chai-http';
 import app from '../../app';
 
 import { validSignUpData, inValidSignUpData, inValidLoginData } from './mockData/user';
-import { users } from '../dummyDb';
+
 
 const { should, expect } = chai;
 should();
@@ -16,7 +16,6 @@ const loginUrl = '/api/v1/auth/login';
 describe('Test for user route', () => {
   describe('Test for signup API', () => {
     it('Should return 201 status code and create new user', (done) => {
-      const newLength = users.length + 1;
       chai.request(app)
         .post(url)
         .send(validSignUpData[0])
@@ -25,12 +24,10 @@ describe('Test for user route', () => {
           res.body.should.be.an('object');
           expect(res.body.status).to.equal(201);
           expect(res.body.data).to.be.a('object');
-          expect(users).to.have.length(newLength);
           done();
         });
     });
     it('Should return 201 status code and create another user', (done) => {
-      const newLength = users.length + 1;
       chai.request(app)
         .post(url)
         .send(validSignUpData[1])
@@ -39,7 +36,6 @@ describe('Test for user route', () => {
           res.body.should.be.an('object');
           expect(res.body.status).to.equal(201);
           expect(res.body.data).to.be.a('object');
-          expect(users).to.have.length(newLength);
           done();
         });
     });
@@ -275,7 +271,6 @@ describe('Test for user route', () => {
 
   describe('Test for login API', () => {
     it('Should return 200 status code and log user in when correctdetails are supplied', (done) => {
-      const newLength = users.length;
       chai.request(app)
         .post(loginUrl)
         .send(validSignUpData[0])
@@ -284,7 +279,6 @@ describe('Test for user route', () => {
           res.body.should.be.an('object');
           expect(res.body.status).to.equal(200);
           expect(res.body.data).to.be.a('object');
-          expect(users).to.have.length(newLength);
           done();
         });
     });
@@ -340,7 +334,7 @@ describe('Test for user route', () => {
           res.body.should.have.property('status');
           res.body.should.have.property('error');
           expect(res.body.status).to.equal(401);
-          expect(res.body.error).to.equal('Incorrect login details');
+          expect(res.body.error).to.equal('Authentication failed');
           done();
         });
     });

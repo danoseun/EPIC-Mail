@@ -1,5 +1,6 @@
 import Validator from 'validatorjs';
-import { users } from '../dummyDb';
+import { queryUsersByEmail } from '../config/sql';
+import db from '../config';
 
 
 /**
@@ -13,7 +14,7 @@ export class UserValidator {
    * @param {function} next - Calls the next function
    * @returns {object} JSON representing the failure message
    */
-  static signUpValidator(req, res, next) {
+  static async signUpValidator(req, res, next) {
     /* eslint-disable prefer-const */
     let {
       email, password, firstname, lastname
@@ -35,11 +36,18 @@ export class UserValidator {
     }
 
     email = email.toLowerCase().trim();
-    const foundEmail = users.find(user => user.email === email);
-    if (foundEmail) {
-      return res.status(409).json({
-        status: 409,
-        error: 'Email already exists!'
+    try {
+      const { rows } = await db.query(queryUsersByEmail, [email]);
+      if (rows[0]) {
+        return res.status(409).json({
+          status: 409,
+          error: 'Email already exists!',
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        error: error.message,
       });
     }
     req.body.email = email;
@@ -57,7 +65,7 @@ export class UserValidator {
    * @param {function} next - Calls the next function/route handler
    * @returns {object} JSON representing the failure message.
    */
-  static loginValidator(req, res, next) {
+  static async loginValidator(req, res, next) {
     let { email, password } = req.body;
 
     const rules = {
@@ -74,22 +82,23 @@ export class UserValidator {
     }
 
     email = email.toLowerCase().trim();
-    const foundUser = users.find(user => user.email === email);
-    if (!foundUser) {
-      return res.status(401).json({
-        status: 401,
-        error: 'Authentication failed',
+    try {
+      const { rows } = await db.query(queryUsersByEmail, [email]);
+      if (!rows[0]) {
+        return res.status(401).json({
+          status: 401,
+          error: 'Authentication failed',
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        error: error.message,
       });
     }
 
     password = password.trim();
-    if (foundUser && password !== foundUser.password) {
-      return res.status(401).json({
-        status: 401,
-        error: 'Incorrect login details',
-      });
-    }
-    req.body.foundUser = foundUser;
+    req.body.email = email;
     req.body.password = password;
     return next();
   }
