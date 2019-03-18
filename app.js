@@ -1,4 +1,4 @@
-// This branch houses the data structure implementation
+import '@babel/polyfill';
 import 'dotenv/config';
 import express from 'express';
 import logger from 'morgan';
@@ -21,4 +21,3 @@ app.listen(port, () => {
 });
 
 export default app;
-
