@@ -1,10 +1,9 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import { sentMessages, receivedMessages } from '../dummyDb';
-import { generateRandomArbitraryNumber, generateRandomParentMessageId } from '../helpers/random';
-
-const messages = [...sentMessages, ...receivedMessages];
-// eslint-disable-next-line no-return-assign
-messages.forEach((element, index) => element.id = index + 1);
+import db from '../config';
+import {
+  postMessage, findUserByEmail, insertIntoSent, insertIntoInbox,
+} from '../config/sql';
 
 /**
  * Class representing MessageController
@@ -19,26 +18,51 @@ export class MessageController {
        * @return {object} JSON object representing success
        * @memeberof MessageController
        */
-  static postMessage(req, res) {
-    const { subject, message } = req.body;
-    const senderId = generateRandomArbitraryNumber(1, 100);
-    const receiverId = generateRandomArbitraryNumber(1, 100);
-    const parentMessageId = generateRandomParentMessageId(0, 10);
-    const newMessage = {
-      id: sentMessages.length + 1,
-      createdOn: Date.now(),
-      subject,
-      message,
-      senderId,
-      receiverId,
-      parentMessageId,
-      status: 'sent'
-    };
-    sentMessages.push(newMessage);
-    return res.status(201).json({
-      status: 201,
-      data: { newMessage }
-    });
+  static async postMessage(req, res) {
+    const {
+      subject, message, status, email, parentmessageid,
+    } = req.body;
+
+    const { id } = req.authData.payload;
+  
+
+    try {
+      if (status === 'draft') {
+        const params = [subject, message, parentmessageid, id, status];
+        const { rows } = await db.query(postMessage, params);
+        return res.status(201).json({
+          status: 201,
+          data: rows[0]
+        });
+      }
+      const receiver = await db.query(findUserByEmail, [email]);
+      if (!receiver.rows[0]) {
+        return res.status(404).json({
+          status: 404,
+          error: 'User does not exist'
+        });
+      }
+      const values = [subject, message, parentmessageid, id, 'sent'];
+      const { rows } = await db.query(postMessage, values);
+
+
+      // persisting into sent table
+      const sent = [rows[0].id, id];
+      await db.query(insertIntoSent, sent);
+
+      // persisting into inbox table
+      const inboxValues = [rows[0].id, receiver.rows[0].id];
+      await db.query(insertIntoInbox, inboxValues);
+      return res.status(201).json({
+        status: 201,
+        data: rows[0]
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error: error.message
+      });
+    }
   }
 
   /**

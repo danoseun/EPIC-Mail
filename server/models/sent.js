@@ -4,7 +4,9 @@ const sentMessagesTable = `DROP TABLE IF EXISTS sent CASCADE;
 CREATE TABLE sent (
   id SERIAL PRIMARY KEY NOT NULL,
   messageid INTEGER NOT NULL,
+  senderid INTEGER NOT NULL,
   FOREIGN KEY (messageid) REFERENCES messages (id) on DELETE CASCADE,
+  FOREIGN KEY (senderid) REFERENCES users (id) on DELETE CASCADE,
   createdon TIMESTAMP WITH TIME ZONE DEFAULT now()
 )`;
 
