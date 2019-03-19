@@ -9,28 +9,45 @@ const { should, expect } = chai;
 should();
 
 chai.use(chaiHttp);
-
+let userToken;
 const url = '/api/v1/messages';
+
+describe('Create token for user', () => {
+  it('Should return token for successful login', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: 'jjames@gmail.com',
+        password: 'jamespass'
+      })
+      .end((error, res) => {
+        expect(res).to.have.status(200);
+        userToken = res.body.data.token;
+        done();
+      });
+  });
+});
+
 
 describe('Test for Message routes', () => {
   describe('Test for create message API', () => {
     it('Should return 201 status code and post email', (done) => {
-      const newMessage = sentMessages.length + 1;
       chai.request(app)
         .post(url)
+        .set('authorization', userToken)
         .send(validMessage[0])
         .end((err, res) => {
           res.should.have.status(201);
           res.body.should.be.an('object');
           expect(res.body.status).to.equal(201);
           expect(res.body.data).to.be.a('object');
-          expect(sentMessages).to.have.length(newMessage);
           done();
         });
     });
     it('Should return 400 status code and error message for undefined/empty subject', (done) => {
       chai.request(app)
         .post(url)
+        .set('authorization', userToken)
         .send(invalidMessages[0])
         .end((err, res) => {
           res.should.have.status(400);
@@ -45,6 +62,7 @@ describe('Test for Message routes', () => {
     it('Should return 400 status code and error message for lengthy subject title', (done) => {
       chai.request(app)
         .post(url)
+        .set('authorization', userToken)
         .send(invalidMessages[1])
         .end((err, res) => {
           res.should.have.status(400);
@@ -59,6 +77,7 @@ describe('Test for Message routes', () => {
     it('Should return 400 status code and error message for undefined/empty message', (done) => {
       chai.request(app)
         .post(url)
+        .set('authorization', userToken)
         .send(invalidMessages[2])
         .end((err, res) => {
           res.should.have.status(400);

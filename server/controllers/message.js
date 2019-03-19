@@ -6,6 +6,14 @@ import {
   postMessage, findUserByEmail, insertIntoSent, insertIntoInbox,
 } from '../config/sql';
 
+
+/* eslint-disable no-unused-vars */
+import { sentMessages, receivedMessages } from '../dummyDb';
+import { generateRandomArbitraryNumber, generateRandomParentMessageId } from '../helpers/random';
+
+const messages = [...sentMessages, ...receivedMessages];
+// eslint-disable-next-line no-return-assign
+messages.forEach((element, index) => element.id = index + 1);
 /**
  * Class representing MessageController
  * @class MessageController

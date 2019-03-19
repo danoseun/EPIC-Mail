@@ -14,6 +14,9 @@ export const invalidMessages = [
 export const validMessage = [
   {
     subject: 'Hey you over there',
-    message: 'The body of this message isnt long so we are set to deliver!'
+    message: 'The body of this message isnt long so we are set to deliver!',
+    status: 'sent',
+    email: 'jinajoe@gmail.com',
+    parentmessageid: 1
   }
 ];
