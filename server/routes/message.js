@@ -1,6 +1,7 @@
 import express from 'express';
 import { MessageController } from '../controllers';
 import { messageValidator, findMailById } from '../middlewares';
+import { verifyToken } from '../helpers/auth'
 
 const {
   postMessage, receiveAllMails, fetchAllUnreadMails, fetchAllSentMails, getSingleMail, deleteSingleEmail
@@ -9,7 +10,7 @@ const {
 
 export const messageRouter = express.Router();
 
-messageRouter.post('/messages', messageValidator, postMessage);
+messageRouter.post('/messages', verifyToken, messageValidator, postMessage);
 messageRouter.get('/messages', receiveAllMails);
 messageRouter.get('/messages/unread', fetchAllUnreadMails);
 messageRouter.get('/messages/sent', fetchAllSentMails);

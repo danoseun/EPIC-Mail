@@ -5,8 +5,10 @@ CREATE TABLE messages (
   id SERIAL PRIMARY KEY NOT NULL,
   subject CHARACTER VARYING(255) NOT NULL,
   message CHARACTER VARYING(500) NOT NULL,
-  parentmessageid INTEGER NOT NULL,
+  parentmessageid INTEGER NULL,
+  creator INTEGER NOT NULL,
   FOREIGN KEY (parentmessageid) references messages (id) on delete CASCADE,
+  FOREIGN KEY (creator) references users (id) on DELETE CASCADE,
   status CHARACTER VARYING(50) NOT NULL,
   createdon TIMESTAMP WITH TIME ZONE DEFAULT now()
 )`;

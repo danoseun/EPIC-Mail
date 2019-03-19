@@ -29,7 +29,6 @@ export class UserController {
 
     try {
       const { rows } = await db.query(createUser, params);
-      console.log('====>', rows);
       if (rows) {
         const authUser = rows[0];
         const token = createToken(authUser);
