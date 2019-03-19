@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import db from '../config';
+import pool from '../config/config';
 import {
   postMessage, findUserByEmail, insertIntoSent, insertIntoInbox,
 } from '../config/sql';
@@ -24,8 +25,8 @@ export class MessageController {
     } = req.body;
 
     const { id } = req.authData.payload;
-  
 
+    const client = await pool.connect();
     try {
       if (status === 'draft') {
         const params = [subject, message, parentmessageid, id, status];
@@ -42,10 +43,11 @@ export class MessageController {
           error: 'User does not exist'
         });
       }
+      
       const values = [subject, message, parentmessageid, id, 'sent'];
       const { rows } = await db.query(postMessage, values);
 
-
+      await client.query('BEGIN');
       // persisting into sent table
       const sent = [rows[0].id, id];
       await db.query(insertIntoSent, sent);
@@ -53,11 +55,13 @@ export class MessageController {
       // persisting into inbox table
       const inboxValues = [rows[0].id, receiver.rows[0].id];
       await db.query(insertIntoInbox, inboxValues);
+      await client.query('COMMIT');
       return res.status(201).json({
         status: 201,
         data: rows[0]
       });
     } catch (error) {
+      await client.query('ROLLBACK');
       res.status(500).json({
         status: 500,
         error: error.message
