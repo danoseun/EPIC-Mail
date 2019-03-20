@@ -3,7 +3,7 @@ import chaiHttp from 'chai-http';
 import app from '../../app';
 
 import { validMessage, invalidMessages } from './mockData/message';
-import { sentMessages, receivedMessages } from '../dummyDb';
+
 
 const { should, expect } = chai;
 should();
@@ -92,48 +92,79 @@ describe('Test for Message routes', () => {
   });
 
   describe('Test for GET endpoints API', () => {
-    it('Should return 200 status code and fetch all RECEIVED MAILS in the db', (done) => {
-      const messages = receivedMessages.length;
+    it('Should return 404 status code if user has no received mails yet', (done) => {
+      chai.request(app)
+        .get(url)
+        .set('authorization', userToken)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.be.an('object');
+          expect(res.body.status).to.equal(404);
+          expect(res.body.error).to.equal('You have no received emails at this time');
+          done();
+        });
+    });
+    it('Should return 403 status code(RECEIVED) if user does not supply token', (done) => {
       chai.request(app)
         .get(url)
         .end((err, res) => {
-          res.should.have.status(200);
+          res.should.have.status(403);
           res.body.should.be.an('object');
-          expect(res.body.status).to.equal(200);
-          expect(res.body.data).to.be.a('array');
-          expect(receivedMessages).to.have.length(messages);
+          expect(res.body.status).to.equal(403);
+          expect(res.body.error).to.equal('No token supplied');
           done();
         });
     });
-    it('Should return 200 status code and fetch all received UNREAD MAILS in the db', (done) => {
-      const messages = receivedMessages.length;
+    it('Should return 400 status code if user has no unread mails in the db', (done) => {
+      chai.request(app)
+        .get('/api/v1/messages/unread')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.be.an('object');
+          expect(res.body.status).to.equal(404);
+          expect(res.body.error).to.equal('You do not have any unread messages in your inbox at this time');
+          done();
+        });
+    });
+    it('Should return 403 status code(UNREAD) if user does not supply token', (done) => {
       chai.request(app)
         .get('/api/v1/messages/unread')
         .end((err, res) => {
-          res.should.have.status(200);
+          res.should.have.status(403);
           res.body.should.be.an('object');
-          expect(res.body.status).to.equal(200);
-          expect(res.body.data).to.be.a('array');
-          expect(receivedMessages).to.have.length(messages);
+          expect(res.body.status).to.equal(403);
+          expect(res.body.error).to.equal('No token supplied');
           done();
         });
     });
-    it('Should return 200 status code and fetch all SENT MAILS in the db', (done) => {
-      const messages = sentMessages.length;
+    it('Should return 200 status code if user has SENT MAILS in the db', (done) => {
       chai.request(app)
         .get('/api/v1/messages/sent')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.an('object');
           expect(res.body.status).to.equal(200);
-          expect(res.body.data).to.be.a('array');
-          expect(sentMessages).to.have.length(messages);
+          expect(res.body.data).to.be.an('array');
+          done();
+        });
+    });
+    it('Should return 403 status code if user(SENT) does not supply token', (done) => {
+      chai.request(app)
+        .get('/api/v1/messages/sent')
+        .end((err, res) => {
+          res.should.have.status(403);
+          res.body.should.be.an('object');
+          expect(res.body.status).to.equal(403);
+          expect(res.body.error).to.equal('No token supplied');
           done();
         });
     });
     it('Should return 200 status code and fetch a single MAIL in the db', (done) => {
       chai.request(app)
         .get('/api/v1/messages/1')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.an('object');
@@ -142,42 +173,45 @@ describe('Test for Message routes', () => {
           done();
         });
     });
-    it('Should return 404 status code and error message', (done) => {
+    it('Should return 500 status code and error message', (done) => {
       chai.request(app)
         .get('/api/v1/messages/2.5')
+        .set('authorization', userToken)
         .end((err, res) => {
-          res.should.have.status(404);
+          res.should.have.status(500);
           res.body.should.be.a('object');
           res.body.should.have.property('status');
           res.body.should.have.property('error');
-          expect(res.body.status).to.equal(404);
-          expect(res.body.error).to.equal('Email not found');
+          expect(res.body.status).to.equal(500);
+          expect(res.body.error).to.equal('message is non-existent');
           done();
         });
     });
-    it('Should return 404 status code and error message', (done) => {
+    it('Should return 500 status code and error message', (done) => {
       chai.request(app)
         .get('/api/v1/messages/qwe')
+        .set('authorization', userToken)
         .end((err, res) => {
-          res.should.have.status(404);
+          res.should.have.status(500);
           res.body.should.be.a('object');
           res.body.should.have.property('status');
           res.body.should.have.property('error');
-          expect(res.body.status).to.equal(404);
-          expect(res.body.error).to.equal('Email not found');
+          expect(res.body.status).to.equal(500);
+          expect(res.body.error).to.equal('message is non-existent');
           done();
         });
     });
   });
   describe('Test for DELETE endpoints API', () => {
-    it('Should return 200 status code and delete email by id', (done) => {
+    it('Should return 500 status message is not existent in the id', (done) => {
       chai.request(app)
         .delete('/api/v1/messages/2')
+        .set('authorization', userToken)
         .end((err, res) => {
-          res.should.have.status(200);
+          res.should.have.status(500);
           res.body.should.be.an('object');
-          expect(res.body.status).to.equal(200);
-          expect(res.body.message).to.equal('Email successfully deleted');
+          expect(res.body.status).to.equal(500);
+          expect(res.body.error).to.equal('message is non-existent');
           done();
         });
     });

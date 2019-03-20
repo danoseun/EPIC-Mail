@@ -5,6 +5,7 @@ const groupMembers = `DROP TABLE IF EXISTS groupmembers CASCADE;
   id SERIAL PRIMARY KEY NOT NULL,
   groupid INTEGER NOT NULL,
   userid INTEGER NOT NULL,
+  userrole CHARACTER VARYING(100) NOT NULL DEFAULT ('user'),
   createdon TIMESTAMP WITH TIME ZONE DEFAULT now(),
   FOREIGN KEY (groupid) references groups (id) on delete CASCADE,
   FOREIGN KEY (userid) references users (id) on delete CASCADE
