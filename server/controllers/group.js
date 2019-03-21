@@ -215,10 +215,10 @@ export class GroupController {
    */
   static async sendMessageToGroup(req, res) {
     const { foundGroup } = req.body;
-    const { id, email } = req.authData.payload;
+    const { id } = req.authData.payload;
     const {
- subject, message, parentmessageid, email, status 
-} = req.body;
+      subject, message, parentmessageid, email, status
+    } = req.body;
     try {
       const { rowCount } = await db.query(selectMembers, [foundGroup.groupid, id]);
       if (rowCount === 0) {
@@ -227,19 +227,19 @@ export class GroupController {
           error: 'You are not permitted to carry out this operation'
         });
       }
-      const values = [subject, message, parentmessageid, email, 'sent'];
-      const message = await db.query(postMessage, values);
+      const values = [subject, message, parentmessageid, email, status];
+      const messages = await db.query(postMessage, values);
 
       // send messages via twilio
       client.messages.create({
-          from: process.env.FROM,
-          to: process.env.TO,
-          body: `Hello, ${email} sent ${message.rows[0].message} to group ${foundGroup.groupid}`
-        });
-        return res.status(201).json({
-            status: 201,
-            data: message.rows[0]
-        });
+        from: process.env.FROM,
+        to: process.env.TO,
+        body: `Hello, ${email} sent ${messages.rows[0].message} to group ${foundGroup.groupid}`
+      });
+      return res.status(201).json({
+        status: 201,
+        data: messages.rows[0]
+      });
     } catch (error) {
       return res.status(500).json({
         status: 500,
