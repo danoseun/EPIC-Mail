@@ -24,3 +24,6 @@ export const updateGroupName = ' UPDATE groups SET name = $1 WHERE id = $2 retur
 export const deleteGroup = 'DELETE FROM groups WHERE id = $1';
 export const queryGroupByName = 'SELECT * FROM groups WHERE name = $1';
 export const createGroupMember = 'INSERT INTO groupmembers (groupid, userid) VALUES ($1, $2) returning *';
+export const selectMembers = 'SELECT * FROM groupmembers WHERE (groupid, userid) = ($1, $2)';
+export const selectAllMembers = 'SELECT id,userid,userrole FROM groupmembers WHERE groupid = $1';
+export const deleteGroupMembers = 'DELETE FROM groupmembers WHERE (groupid, userid) = ($1, $2) returning *';
