@@ -11,12 +11,12 @@ import { sentMessages, receivedMessages } from '../dummyDb';
  */
 export const messageValidator = (req, res, next) => {
   /* eslint-disable prefer-const */
-  let { subject, message, status } = req.body;
+  let { subject, message } = req.body;
 
   const rules = {
     subject: 'required|max:50',
-    message: 'required',
-    status: 'required'
+    message: 'required'
+    // status: 'required'
   };
   const validation = new Validator(req.body, rules);
 
@@ -28,7 +28,7 @@ export const messageValidator = (req, res, next) => {
   }
   req.body.subject = subject;
   req.body.message = message;
-  req.body.status = status;
+  // req.body.status = status;
   return next();
 };
 

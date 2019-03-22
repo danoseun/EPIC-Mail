@@ -5,7 +5,9 @@ export const postMessage = 'INSERT INTO messages (subject, message, parentmessag
 export const findUserByEmail = 'SELECT * FROM users WHERE email = $1';
 export const insertIntoSent = 'INSERT INTO sent (messageid, senderid) VALUES ($1, $2) returning *';
 export const insertIntoInbox = 'INSERT INTO inbox (messageid, receiverid) VALUES ($1, $2) returning *';
-export const receivedMessages = 'SELECT messages.id, messages.createdon, messages.subject, messages.message, messages.parentmessageid, messages.status FROM messages LEFT JOIN inbox ON messages.id = inbox.messageid WHERE inbox.receiverid = $1';
+export const recMes = 'SELECT messages.id,messages.createdon,messages.subject,messages.message,messages.creator as senderid, inbox.receiverid,messages.parentmessageid from inbox left join messages on inbox.messageid = messages.id where receiverid = $1';
+// export const receivedMessages = 'SELECT messages.id, messages.createdon, messages.subject, messages.message, messages.parentmessageid, messages.status FROM messages LEFT JOIN inbox ON messages.id = inbox.messageid WHERE inbox.receiverid = $1';
+export const unReadRec = 'select messages.id,messages.createdon,messages.subject,messages.message,messages.creator as senderid, inbox.receiverid,messages.parentmessageid,messages.status from inbox left join messages on inbox.messageid = messages.id where (inbox.receiverid, messages.status) = ($1, $2)';
 export const unReadReceivedMessages = 'SELECT messages.id, messages.createdon, messages.subject, messages.message, messages.parentmessageid, messages.status FROM messages LEFT JOIN inbox ON messages.id = inbox.messageid WHERE (inbox.receiverid, messages.status) = ($1, $2)';
 export const sentMessages = 'SELECT messages.id, messages.createdon, messages.subject, messages.message, messages.parentmessageid, messages.status FROM messages LEFT JOIN sent ON messages.id = sent.messageid WHERE sent.senderid = $1';
 export const draftQuery = 'SELECT * FROM messages WHERE (creator, status, id) = ($1, $2, $3)';
