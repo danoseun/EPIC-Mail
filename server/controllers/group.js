@@ -24,17 +24,17 @@ export class GroupController {
   static async createGroup(req, res) {
     const { id } = req.authData.payload;
 
-    const client = await pool.connect();
+    const clientt = await pool.connect();
     try {
       const { rows } = await db.query(findUserById, [id]);
       const { email } = rows[0];
       const { name } = req.body;
       const params = [name, email];
-      await client.query('BEGIN');
+      await clientt.query('BEGIN');
       const result = await db.query(createGroupQuery, params);
       const values = [result.rows[0].id, id, 'admin'];
       await db.query(insertAdminIntoGroupMembersTable, values);
-      await client.query('COMMIT');
+      await clientt.query('COMMIT');
       const newGroup = result.rows[0];
       return res.status(201).json({
         status: 201,
@@ -187,7 +187,6 @@ export class GroupController {
     const user = Number(req.params.userId);
     try {
       const deletedMember = await db.query(deleteGroupMembers, [foundGroup.groupid, user]);
-      // console.log('deleted', deletedMember);
       if (deletedMember.rowCount !== 0) {
         return res.status(200).json({
           status: 200,

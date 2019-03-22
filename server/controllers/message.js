@@ -16,7 +16,10 @@ import {
   readPatch,
   deleteSentQuery,
   deleteInboxQuery,
-  deleteMessageQuery
+  deleteMessageQuery,
+  queryUsersByEmail,
+  recMes,
+  unReadRec
 } from '../config/sql';
 
 /* eslint-disable no-unused-vars */
@@ -42,44 +45,31 @@ export class MessageController {
    */
   static async postMessage(req, res) {
     const {
-      subject, message, status, email, parentmessageid
+      subject, message, email
     } = req.body;
 
     const { id } = req.authData.payload;
 
     const client = await pool.connect();
     try {
-      if (status === 'draft') {
-        const params = [subject, message, parentmessageid, id, status];
-        const { rows } = await db.query(postMessage, params);
-        return res.status(201).json({
-          status: 201,
-          data: rows[0]
-        });
-      }
-      const receiver = await db.query(findUserByEmail, [email]);
-      if (!receiver.rows[0]) {
+      const result = await db.query(queryUsersByEmail, [email]);
+      if (result.rowCount === 0) {
         return res.status(404).json({
           status: 404,
           error: 'User does not exist'
         });
       }
-
-      const values = [subject, message, parentmessageid, id, 'sent'];
-      const { rows } = await db.query(postMessage, values);
-
-      await client.query('BEGIN');
+      const insertResult = await db.query(postMessage, [subject, message, null, id, 'sent']);
       // persisting into sent table
-      const sent = [rows[0].id, id];
-      await db.query(insertIntoSent, sent);
-
+      await client.query('BEGIN');
+      await db.query(insertIntoSent, [insertResult.rows[0].id, id]);
+       
       // persisting into inbox table
-      const inboxValues = [rows[0].id, receiver.rows[0].id];
-      await db.query(insertIntoInbox, inboxValues);
+      await db.query(insertIntoInbox, [insertResult.rows[0].id, result.rows[0].id]);
       await client.query('COMMIT');
       return res.status(201).json({
         status: 201,
-        data: rows[0]
+        data: insertResult.rows[0]
       });
     } catch (error) {
       await client.query('ROLLBACK');
@@ -101,7 +91,7 @@ export class MessageController {
   static async receiveAllMails(req, res) {
     const { id } = req.authData.payload;
     try {
-      const { rows, rowCount } = await db.query(receivedMessages, [id]);
+      const { rows, rowCount } = await db.query(recMes, [id]);
       if (rowCount === 0) {
         return res.status(404).json({
           status: 404,
@@ -131,7 +121,7 @@ export class MessageController {
   static async fetchAllUnreadMails(req, res) {
     const { id } = req.authData.payload;
     try {
-      const { rows, rowCount } = await db.query(unReadReceivedMessages, [
+      const { rows, rowCount } = await db.query(unReadRec, [
         id,
         'unread'
       ]);
@@ -205,7 +195,6 @@ export class MessageController {
         });
       }
       const { rows } = await db.query(queryString, [params]);
-      console.log(rows);
       if (rows[0].senderid === id) {
         return res.status(200).json({
           status: 200,

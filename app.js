@@ -3,7 +3,9 @@ import 'dotenv/config';
 import express from 'express';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
-import { defaultRouter, userRouter, messageRouter, groupRouter } from './server/routes';
+import {
+  defaultRouter, userRouter, messageRouter, groupRouter
+} from './server/routes';
 
 const app = express();
 app.use(logger('dev'));
