@@ -4,22 +4,17 @@
 import db from '../config';
 import pool from '../config/config';
 import {
-  postMessage,
-  findUserByEmail,
+  insertIntoReceived,
   insertIntoSent,
-  insertIntoInbox,
   receivedMessages,
   unReadReceivedMessages,
   sentMessages,
-  draftQuery,
-  queryString,
-  readPatch,
-  deleteSentQuery,
-  deleteInboxQuery,
-  deleteMessageQuery,
   queryUsersByEmail,
-  recMes,
-  unReadRec
+  getSingleReceivedMessage,
+  updateReceivedStatus,
+  getSingleSentMessage,
+  deleteReceievedMessage,
+  deleteSentMessage
 } from '../config/sql';
 
 /* eslint-disable no-unused-vars */
@@ -49,6 +44,7 @@ export class MessageController {
     } = req.body;
 
     const { id } = req.authData.payload;
+    const senemail = req.authData.payload.email;
 
     const client = await pool.connect();
     try {
@@ -59,13 +55,13 @@ export class MessageController {
           error: 'User does not exist'
         });
       }
-      const insertResult = await db.query(postMessage, [subject, message, null, id, 'sent']);
-      // persisting into sent table
+
+      // insert into sent messages table
       await client.query('BEGIN');
-      await db.query(insertIntoSent, [insertResult.rows[0].id, id]);
-       
-      // persisting into inbox table
-      await db.query(insertIntoInbox, [insertResult.rows[0].id, result.rows[0].id]);
+      const insertResult = await db.query(insertIntoSent, [subject, message, id, email, result.rows[0].id]);
+      // persisting into received messages table
+      await db.query(insertIntoReceived, [subject, message, id, senemail, result.rows[0].id]);
+
       await client.query('COMMIT');
       return res.status(201).json({
         status: 201,
@@ -91,7 +87,7 @@ export class MessageController {
   static async receiveAllMails(req, res) {
     const { id } = req.authData.payload;
     try {
-      const { rows, rowCount } = await db.query(recMes, [id]);
+      const { rows, rowCount } = await db.query(receivedMessages, [id]);
       if (rowCount === 0) {
         return res.status(404).json({
           status: 404,
@@ -121,7 +117,7 @@ export class MessageController {
   static async fetchAllUnreadMails(req, res) {
     const { id } = req.authData.payload;
     try {
-      const { rows, rowCount } = await db.query(unReadRec, [
+      const { rows, rowCount } = await db.query(unReadReceivedMessages, [
         id,
         'unread'
       ]);
@@ -175,96 +171,138 @@ export class MessageController {
   }
 
   /**
-   * User can fetch single email record on the application
+   * User can fetch single received email record on the application
    * @static
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @return {object} JSON object representing success
    * @memeberof MessageController
    */
-  static async getSingleMail(req, res) {
+  static async getSingleReceivedMail(req, res) {
     const params = Number(req.params.messageId);
     const { id } = req.authData.payload;
 
     try {
-      const draftResult = await db.query(draftQuery, [id, 'draft', params]);
-      if (draftResult.rowCount !== 0) {
-        return res.status(200).json({
-          status: 200,
-          data: draftResult.rows[0]
-        });
-      }
-      const { rows } = await db.query(queryString, [params]);
-      if (rows[0].senderid === id) {
+      const { rows, rowCount } = await db.query(getSingleReceivedMessage, [params, id]);
+      if (rowCount > 0) {
+        if (rows[0].status === 'unread') {
+          const res = await db.query(updateReceivedStatus, ['read', params, id]);
+          return res.status(200).json({
+            status: 200,
+            data: res.rows[0]
+          });
+        }
         return res.status(200).json({
           status: 200,
           data: rows[0]
         });
       }
-      if (rows[0].receiverid === id) {
-        const updatedMessage = await db.query(readPatch, ['read', rows[0].id]);
-        return res.status(200).json({
-          status: 200,
-          data: updatedMesssage.rows[0]
-        });
-      }
-
       return res.status(404).json({
         status: 404,
-        error: 'message is non existent'
+        error: 'Message is unavailable'
       });
     } catch (error) {
-      res.status(500).json({
+      return res.status(500).json({
         status: 500,
-        error: 'message is non-existent'
+        error: error.message
       });
     }
   }
 
   /**
-   * User can delete single email record on the application
+   * User can fetch single sent email record on the application
    * @static
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @return {object} JSON object representing success
    * @memeberof MessageController
    */
-  static async deleteSingleEmail(req, res) {
+  static async getSingleSentMail(req, res) {
     const params = Number(req.params.messageId);
     const { id } = req.authData.payload;
 
     try {
-      const deletedDraft = await db.query(deleteMessageQuery, [id, 'draft', params]);
-      if (deletedDraft.rowCount !== 0) {
-        return res.status(200).json({
-          status: 200,
-          data: 'Message was succesfully deleted'
+      const { rows, rowCount } = await db.query(getSingleSentMessage, [params, id]);
+      if (rowCount === 0) {
+        return res.status(404).json({
+          status: 404,
+          error: 'The message you are requesting for is unavailable'
         });
       }
-      const { rows } = await db.query(deleteSentQuery, [params]);
-      console.log(rows);
-      if (rows[0].senderid === id) {
-        return res.status(200).json({
-          status: 200,
-          data: 'Message was sucessfully deleted'
-        });
-      }
-      if (rows[0].receiverid === id) {
-        const updatedMessage = await db.query(deleteInboxQuery, [id, rows[0].id]);
-        return res.status(200).json({
-          status: 200,
-          data: 'Message was successfully deleted'
-        });
-      }
-
-      return res.status(404).json({
-        status: 404,
-        error: 'message is non existent'
+      return res.status(200).json({
+        status: 200,
+        data: rows[0]
       });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * User can delete single received email record on the application
+   * @static
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @return {object} JSON object representing success
+   * @memeberof MessageController
+   */
+  static async deleteSingleReceivedEmail(req, res) {
+    const params = Number(req.params.messageId);
+    const { id } = req.authData.payload;
+
+    try {
+      const { rows, rowCount } = await db.query(deleteReceievedMessage, [params, id]);
+      if (rowCount === 0) {
+        res.status(404).json({
+          status: 404,
+          error: 'You cant delete a received message that you dont have'
+        });
+      } else {
+        return res.status(200).json({
+          status: 200,
+          message: 'Received Message successfully deleted'
+        });
+      }
     } catch (error) {
       res.status(500).json({
         status: 500,
-        error: 'message is non-existent'
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * User can delete single sent email record on the application
+   * @static
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @return {object} JSON object representing success
+   * @memeberof MessageController
+   */
+  static async deleteSingleSentEmail(req, res) {
+    const params = Number(req.params.messageId);
+    const { id } = req.authData.payload;
+
+    try {
+      const { rows, rowCount } = await db.query(deleteSentMessage, [params, id]);
+      if (rowCount === 0) {
+        res.status(404).json({
+          status: 404,
+          error: 'You cant delete a sent message that you dont have'
+        });
+      } else {
+        return res.status(200).json({
+          status: 200,
+          message: 'Sent Message successfully deleted'
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error: error.message
       });
     }
   }

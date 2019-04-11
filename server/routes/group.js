@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import express from 'express';
 import { GroupController } from '../controllers';
 import { GroupValidator } from '../middlewares';
@@ -6,7 +7,7 @@ import { verifyToken } from '../helpers/auth';
 const { validateName, findSpecificGroup } = GroupValidator;
 
 const {
-  createGroup, getAllGroupsByUser, patchGroupByName, deleteSpecificGroup, addUserToGroup, deleteSpecificUserGroup, sendMessageToGroup
+  createGroup, getAllGroupsByUser, patchGroupByName, deleteSpecificGroup, addUserToGroup, deleteSpecificUserGroup, sendMessageToGroup, sendMailToGroup
 } = GroupController;
 
 export const groupRouter = express.Router();
@@ -18,3 +19,4 @@ groupRouter.delete('/groups/:groupId', verifyToken, findSpecificGroup, deleteSpe
 groupRouter.post('/groups/:groupId/users', verifyToken, findSpecificGroup, addUserToGroup);
 groupRouter.delete('/groups/:groupId/users/:userId', verifyToken, findSpecificGroup, deleteSpecificUserGroup);
 groupRouter.post('/groups/:groupId/messages', verifyToken, findSpecificGroup, sendMessageToGroup);
+groupRouter.post('/groups/:groupId/mail', verifyToken, findSpecificGroup, sendMailToGroup);
