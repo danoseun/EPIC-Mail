@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import express from 'express';
 import { GroupController } from '../controllers';
 import { GroupValidator } from '../middlewares';

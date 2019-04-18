@@ -1,13 +1,15 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unused-vars */
 import 'dotenv/config';
 import db from '../config';
 import {
-  createGroupQuery, insertAdminIntoGroupMembersTable, findUserById, fetchAllGroupsByUser, updateGroupName, deleteGroup, queryUsersByEmail, createGroupMember, selectMembers, selectAllMembers, deleteGroupMembers, postMessage
+  createGroupQuery, insertAdminIntoGroupMembersTable, findUserById, fetchAllGroupsByUser, updateGroupName, deleteGroup, queryUsersByEmail, createGroupMember, selectMembers, selectAllMembers, deleteGroupMembers, groupReceievedMessages, groupSentMessages, groupReceivedMessages
 } from '../config/sql';
 import pool from '../config/config';
 
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const client = require('twilio')(accountSid, authToken);
+const cliente = require('twilio')(accountSid, authToken);
 /**
  * Class representing GroupController
  * @class GroupController
@@ -41,7 +43,7 @@ export class GroupController {
         data: newGroup
       });
     } catch (error) {
-      await client.query('ROLLBACK');
+      await clientt.query('ROLLBACK');
       return res.status(500).json({
         status: 500,
         error: error.message,
@@ -186,6 +188,7 @@ export class GroupController {
     const { foundGroup } = req.body;
     const user = Number(req.params.userId);
     try {
+      // if user(coming from params) === id (from auth) don't delete else delete
       const deletedMember = await db.query(deleteGroupMembers, [foundGroup.groupid, user]);
       if (deletedMember.rowCount !== 0) {
         return res.status(200).json({
@@ -212,12 +215,74 @@ export class GroupController {
    * @param {function} next - Calls the next function/route handler
    * @returns {object} JSON representing the failure message.
    */
+  // static async sendMailToGroup(req, res) {
+  //   const { foundGroup } = req.body;
+  //   const { id } = req.authData.payload;
+  //   const { email } = req.authData.payload;
+  //   const {
+  //     subject, message
+  //   } = req.body;
+  //   const client = await pool.connect();
+
+  //   // Check if user is the creator of the group and in turn a member of the group
+  //   try {
+  //     const { rowCount } = await db.query(selectMembers, [foundGroup.groupid, id]);
+  //     if (rowCount === 0) {
+  //       return res.status(403).json({
+  //         status: 403,
+  //         error: 'You are not permitted to carry out this operation'
+  //       });
+  //     }
+
+  //     /**
+  //      * new implementation will be to insert this message
+  //      * into sent for the sender and received into
+  //      */
+  //     const values = [subject, message, id, foundGroup.groupid];
+  //     await client.query('BEGIN');
+  //     const messages = await db.query(groupSentMessages, values);
+  //     console.log('message', messages);
+
+  //     await db.query(groupReceivedMessages, [subject, message, id, email, foundGroup.groupid]);
+
+  //     await client.query('COMMIT');
+  //     // send messages via twilio
+  //     cliente.messages.create({
+  //       from: process.env.FROM,
+  //       to: process.env.TO,
+  //       body: `Hello, ${email} sent ${messages.rows[0].message} to group ${foundGroup.groupid}`
+  //     });
+  //     return res.status(201).json({
+  //       status: 201,
+  //       data: messages.rows[0]
+  //     });
+  //   } catch (error) {
+  //     await client.query('ROLLBACK');
+  //     return res.status(500).json({
+  //       status: 500,
+  //       error: error.message,
+  //     });
+  //   }
+  // }
+
+  /**
+   * Send message to a Specific Group on the application
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {function} next - Calls the next function/route handler
+   * @returns {object} JSON representing the failure message.
+   */
   static async sendMessageToGroup(req, res) {
     const { foundGroup } = req.body;
     const { id } = req.authData.payload;
+    const { email } = req.authData.payload;
     const {
-      subject, message, parentmessageid, email, status
+      subject, message
     } = req.body;
+
+    const client = await pool.connect();
+
+    // Check if user is the creator of the group and in turn a member of the group
     try {
       const { rowCount } = await db.query(selectMembers, [foundGroup.groupid, id]);
       if (rowCount === 0) {
@@ -226,23 +291,23 @@ export class GroupController {
           error: 'You are not permitted to carry out this operation'
         });
       }
-      const values = [subject, message, parentmessageid, email, status];
-      const messages = await db.query(postMessage, values);
+      // insert into sent messages table
+      await client.query('BEGIN');
+      const insertResult = await db.query(groupSentMessages, [subject, message, id, foundGroup.groupid]);
+      // console.log('groups', insertResult.rows[0]);
+      // persist into received messages table
+      await db.query(groupReceivedMessages, [subject, message, id, email, foundGroup.groupid]);
 
-      // send messages via twilio
-      client.messages.create({
-        from: process.env.FROM,
-        to: process.env.TO,
-        body: `Hello, ${email} sent ${messages.rows[0].message} to group ${foundGroup.groupid}`
-      });
+      await client.query('COMMIT');
       return res.status(201).json({
         status: 201,
-        data: messages.rows[0]
+        data: insertResult.rows[0]
       });
     } catch (error) {
+      await client.query('ROLLBACK');
       return res.status(500).json({
         status: 500,
-        error: error.message,
+        error: error.message
       });
     }
   }

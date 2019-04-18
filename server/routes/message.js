@@ -4,7 +4,7 @@ import { messageValidator } from '../middlewares';
 import { verifyToken } from '../helpers/auth';
 
 const {
-  postMessage, receiveAllMails, fetchAllUnreadMails, fetchAllSentMails, getSingleMail, deleteSingleEmail
+  postMessage, receiveAllMails, fetchAllUnreadMails, fetchAllSentMails, getSingleReceivedMail, getSingleSentMail, deleteSingleReceivedEmail, deleteSingleSentEmail
 } = MessageController;
 
 
@@ -14,5 +14,7 @@ messageRouter.post('/messages', verifyToken, messageValidator, postMessage);
 messageRouter.get('/messages', verifyToken, receiveAllMails);
 messageRouter.get('/messages/unread', verifyToken, fetchAllUnreadMails);
 messageRouter.get('/messages/sent', verifyToken, fetchAllSentMails);
-messageRouter.get('/messages/:messageId', verifyToken, getSingleMail);
-messageRouter.delete('/messages/:messageId', verifyToken, deleteSingleEmail);
+messageRouter.get('/messages/received/:messageId', verifyToken, getSingleReceivedMail);
+messageRouter.get('/messages/sent/:messageId', verifyToken, getSingleSentMail);
+messageRouter.delete('/messages/received/:messageId', verifyToken, deleteSingleReceivedEmail);
+messageRouter.delete('/messages/sent/:messageId', verifyToken, deleteSingleSentEmail);

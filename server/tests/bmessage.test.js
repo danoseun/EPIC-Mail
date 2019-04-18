@@ -163,7 +163,7 @@ describe('Test for Message routes', () => {
     });
     it('Should return 200 status code and fetch a single MAIL in the db', (done) => {
       chai.request(app)
-        .get('/api/v1/messages/1')
+        .get('/api/v1/messages/sent/1')
         .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
@@ -173,45 +173,45 @@ describe('Test for Message routes', () => {
           done();
         });
     });
-    it('Should return 500 status code and error message', (done) => {
+    it('Should return 404 status code and error message', (done) => {
       chai.request(app)
-        .get('/api/v1/messages/2.5')
+        .get('/api/v1/messages/sent/15')
         .set('authorization', userToken)
         .end((err, res) => {
-          res.should.have.status(500);
+          res.should.have.status(404);
           res.body.should.be.a('object');
           res.body.should.have.property('status');
           res.body.should.have.property('error');
-          expect(res.body.status).to.equal(500);
-          expect(res.body.error).to.equal('message is non-existent');
+          expect(res.body.status).to.equal(404);
+          expect(res.body.error).to.equal('The message you are requesting for is unavailable');
           done();
         });
     });
-    it('Should return 500 status code and error message', (done) => {
+    it('Should return 404 status code and (receiveAllMails) error message if user has no message in the db', (done) => {
       chai.request(app)
-        .get('/api/v1/messages/qwe')
+        .get('/api/v1/messages')
         .set('authorization', userToken)
         .end((err, res) => {
-          res.should.have.status(500);
+          res.should.have.status(404);
           res.body.should.be.a('object');
           res.body.should.have.property('status');
           res.body.should.have.property('error');
-          expect(res.body.status).to.equal(500);
-          expect(res.body.error).to.equal('message is non-existent');
+          expect(res.body.status).to.equal(404);
+          expect(res.body.error).to.equal('You have no received emails at this time');
           done();
         });
     });
   });
   describe('Test for DELETE endpoints API', () => {
-    it('Should return 500 status message is not existent in the id', (done) => {
+    it('Should return 404 status if message is non-existent in the db', (done) => {
       chai.request(app)
-        .delete('/api/v1/messages/2')
+        .delete('/api/v1/messages/sent/2')
         .set('authorization', userToken)
         .end((err, res) => {
-          res.should.have.status(500);
+          res.should.have.status(404);
           res.body.should.be.an('object');
-          expect(res.body.status).to.equal(500);
-          expect(res.body.error).to.equal('message is non-existent');
+          expect(res.body.status).to.equal(404);
+          expect(res.body.error).to.equal('You cant delete a sent message that you dont have');
           done();
         });
     });
