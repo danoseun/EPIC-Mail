@@ -10,11 +10,11 @@ import createGroupMembersTable from './groupmembers';
   try {
     await createUsersTable();
     await createContactsTable();
+    await createGroupTable();
+    await createGroupMembersTable();
     await createReceivedMessagesTable();
     await createsentMessagesTable();
     // await createInboxMesssagesTable();
-    await createGroupTable();
-    await createGroupMembersTable();
   } catch (error) {
     console.log(error);
   }
