@@ -1,5 +1,5 @@
 // const baseURL = 'https://seun-epicmail.herokuapp.com/api/v1';
-const baseURL = 'http://localhost:3000/api/v1';
+// const baseURL = 'http://localhost:3000/api/v1';
 
 const login = async (event) => {
   event.preventDefault();
