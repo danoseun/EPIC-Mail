@@ -1,0 +1,44 @@
+.signup-div {
+    margin: auto;
+    width: 60%;
+    display: inline-block;
+  }
+  
+  form {
+    height: 95%;
+  }
+  
+  .content {
+    height: 500px;
+  }
+  
+  form h1 {
+    letter-spacing: 9px;
+  }
+  
+  #form-id a {
+    text-decoration: none;
+    float: inherit;
+    margin-top: 7px;
+    font-size: 15px;
+    line-height: 2.5;
+    color: white;
+  }
+  
+  form input[type="submit"] {
+    margin: auto;
+    margin-top: 10px;
+    display: block;
+    width: 50%;
+  }
+
+  @media (max-width: 600px) {
+    .signup-div {
+      margin-top: 5%;
+      margin-left: 10%;
+      margin-right: 10%;
+      margin-bottom: 10%;
+      width: 80%;
+    }
+  }
+  
